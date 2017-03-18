@@ -1,5 +1,7 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
+import {connect} from 'react-redux';
+import * as searchActions from '../../searchActions';
 
 class SearchBar extends React.Component {
   constructor(props, context) {
@@ -19,14 +21,20 @@ class SearchBar extends React.Component {
   }
 
   onClickSearch(){
-    alert(this.state.search.text);
+    //alert(this.state.search.text);
+    this.props.dispatch(searchActions.searchTab(this.state.search));
   }
+
+  tabRow(){
+    return <div key={index}>{tab.title}</div>;
+  }
+
 
   render() {
     return (
       <div className="jumbotron">
         <h1>Search for a song or band</h1>
-        <p>Some other text about tabs and what to do.</p>
+        <p>Some other text about tabs and what to do and stuff.</p>
         <div className="row">            
           <div className="col-lg-9">
             <div className="input-group">
@@ -46,9 +54,21 @@ class SearchBar extends React.Component {
             </div>
           </div>
         </div>
+        {this.props.tabs.map(this.tabRow)}
       </div>
     );
   }
 }
 
-export default SearchBar;
+SearchBar.PropTypes = {
+    dispatch: PropTypes.func.isRequired,
+    tabs: PropTypes.array.isRequired
+};
+
+function mapStateToProps(state, ownProps) {
+    return {
+      tabs: state.tabs
+    };
+}
+
+export default connect(mapStateToProps)(SearchBar);
